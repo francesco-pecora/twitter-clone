@@ -15,7 +15,14 @@ app.get("/", (req, res) => {
     res.json({  
       message: "Hello!"
     });
-})
+});
+
+app.get("/tweets", (req, res) => {
+    tweets.find()
+          .then(tweet => {
+              res.json(tweet);
+          })
+});
 
 function isValidTweet(tweet){
     return tweet.name && tweet.name.toString().trim() != "" &&
@@ -42,8 +49,8 @@ app.post("/tweets", (req, res) => {
             message: "Name and Tweet are required..."
         });
     }
-})
+});
 
 app.listen(5000, ()=>{
     console.log("Listening on port 5000...")
-})
+});

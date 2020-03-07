@@ -26,4 +26,11 @@ form.addEventListener('submit', (event) => {
             "content-type": "application/json"
         }
     })
+    .then(response => response.json())
+    .then(createdTweet => {
+        console.log(createdTweet);
+        form.reset(); // cleans the tweet (text) area
+        form.style.display = "";
+        loadingElement.style.display = "none";
+    });
 })

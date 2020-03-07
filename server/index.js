@@ -1,12 +1,19 @@
 const express = require("express");
 const cors = require("cors");
-const monk = require("monk");
+const monk = require("monk");        // database connection mongodb
+const Filter = require("bad-words"); // cleans user input from bad words
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
 // mongo is like a big array with the entries
 const db = monk("localhost/tweeter"); // right now running on localhost, with connection to database tweeter
 const tweets = db.get("tweets"); // collection in the database
+const filter = new Filter();
+const limiter = rateLimit({
+    windowMs: 30 * 1000, // 30 seconds
+    max: 1
+  });
 
 app.use(cors()); // cors error when trying to access the server
 app.use(express.json()); // built into express to parse any json incoming request
@@ -29,11 +36,14 @@ function isValidTweet(tweet){
            tweet.content && tweet.content.toString().trim() != ""
 }
 
+// placed over here so it only limits the post and not the get requests
+app.use(limiter);
+
 app.post("/tweets", (req, res) => {
     if(isValidTweet(req.body)){
         const tweet = {
-            name: req.body.name.toString(), // prevent database injection using toString
-            content: req.body.content.toString(),
+            name: filter.clean(req.body.name.toString().trim()), // prevent database injection using toString
+            content: filter.clean(req.body.content.toString().trim()),
             created: new Date()
         };
         //insert into db

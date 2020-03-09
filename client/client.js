@@ -58,11 +58,23 @@ function listAllTweets() {
                 const date = document.createElement('small');
                 date.textContent = new Date(tweet.created);
 
+                const space = document.createElement('div');
+                space.style.height = "70px";
+
+                // adding content to the tweets divs
                 div.appendChild(header);
                 div.appendChild(contents);
                 div.appendChild(date);
+                div.appendChild(space);
+
+                // singular tweet styling
+                div.style.textAlign = "center";
+                div.style.border = "solid #63bbf2";
+                div.style.marginBottom = "20px";
+                div.style.borderRadius = "30px";
 
                 tweetsElement.appendChild(div);
+                tweetsElement.style.width = "50%";
             });
             loadingElement.style.display = "none";
         });

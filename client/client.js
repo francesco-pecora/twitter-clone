@@ -31,9 +31,11 @@ form.addEventListener('submit', (event) => {
     })
     .then(response => response.json())
     .then(createdTweet => {
-        console.log(createdTweet);
         form.reset(); // cleans the tweet (text) area
-        form.style.display = "";
+        // hiding the form for 30 seconds to avoid users spamming website
+        setTimeout(() => {
+            form.style.display = "";
+        }, 30000);
         listAllTweets(); // make sure re-render tweets when submit
     });
 })

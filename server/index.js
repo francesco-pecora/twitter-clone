@@ -3,11 +3,11 @@ const cors = require("cors");
 const monk = require("monk");        // database connection mongodb
 const Filter = require("bad-words"); // cleans user input from bad words
 const rateLimit = require("express-rate-limit");
+const mongo = require("mongodb");
 
 const app = express();
 
-// mongo is like a big array with the entries
-const db = monk("localhost/tweeter"); // right now running on localhost, with connection to database tweeter
+const db = monk(process.env.MONGO_URI || "localhost/tweeter");
 const tweets = db.get("tweets"); // collection in the database
 const filter = new Filter();
 const limiter = rateLimit({
@@ -20,7 +20,7 @@ app.use(express.json()); // built into express to parse any json incoming reques
 
 app.get("/", (req, res) => {
     res.json({  
-      message: "Hello!"
+      message: "Hello!",
     });
 });
 

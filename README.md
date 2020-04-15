@@ -1,3 +1,3 @@
 # twitter-clone
 
-![Screenshot](TwitterClone.gif)
+<img src="TwitterClone.gif" alt="gif"/>

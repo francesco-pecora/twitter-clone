@@ -3,7 +3,7 @@ console.log("It's working...");
 const form = document.querySelector("form");
 const loadingElement = document.querySelector(".loading");
 const tweetsElement = document.querySelector(".tweets");
-const API_URL = "http://localhost:5000/tweets";
+const API_URL = window.location.hostname === "localhost" ? "http://localhost:5000/tweets" : "https://twitter-clone-mu.now.sh/";
 
 loadingElement.style.display = "";
 

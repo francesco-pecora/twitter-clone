@@ -11,7 +11,7 @@ const db = monk(process.env.MONGO_URI || "localhost/tweeter");
 const tweets = db.get("tweets"); // collection in the database
 const filter = new Filter();
 const limiter = rateLimit({
-    windowMs: 30 * 1000, // 30 seconds
+    windowMs: 3 * 1000, // 3 seconds
     max: 1
   });
 
@@ -23,6 +23,10 @@ app.get("/", (req, res) => {
       message: "Hello!",
     });
 });
+
+app.get("/tweets/ip", (req, res) => {
+    res.json({ip: req.connection.remoteAddress});
+})
 
 app.get("/tweets", (req, res) => {
     tweets.find()
@@ -36,7 +40,15 @@ function isValidTweet(tweet){
            tweet.content && tweet.content.toString().trim() != ""
 }
 
-// placed over here so it only limits the post and not the get requests
+app.delete('/tweets/:id', (req, res) => {
+    let id = req.params.id;
+    tweets.remove({ _id: id })
+        .then(response => {
+            res.json("Tweet deleted...");
+        });
+});
+
+// placed over here so it only limits the post and not the get and delete requests
 app.use(limiter);
 
 app.post("/tweets", (req, res) => {
@@ -44,6 +56,7 @@ app.post("/tweets", (req, res) => {
         const tweet = {
             name: filter.clean(req.body.name.toString().trim()), // prevent database injection using toString
             content: filter.clean(req.body.content.toString().trim()),
+            ip: req.connection.remoteAddress,
             created: new Date()
         };
         //insert into db
